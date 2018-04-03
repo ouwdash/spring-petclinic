@@ -23,11 +23,10 @@ stages {
     stage('Build') {
         steps {
             echo "Cleaning Jenkins pipeline directory $WORKSPACE" 
-            sh "sudo rm -Rf $WORKSPACE/*"
+            sh "sudo rm -Rf $WORKSPACE"
             echo "Getting package from Git... ($GIT)"
-            sh "git clone $GIT $APPNAME"
+            sh "git clone $GIT ."
             echo "Building package with Maven"
-            sh "mv $WORKSPACE/$APPNAME/* $WORKSPACE/"
             sh "mkdir $WORKSPACE/log/"
             sh "./mvnw package &> $MAVEN_BUILD_LOG"
             echo "Printing the results from the logfile..."
