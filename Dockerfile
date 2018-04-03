@@ -19,10 +19,6 @@ RUN apt-get update && apt-get install -y openjdk-8-jdk && rm -rf /var/lib/apt/li
 #COPY PACKAGE VANAF Docker IMG /Users/H/Desktop/Oelan/Docker/Docker_IMG/
 COPY $PACKAGE_SRC_DIR/$PACKAGE_NAME $PACKAGE_DEST_DIR/$PACKAGE_NAME
 
-
-#/home/spring/build/spring-petclinic-2.0.0.BUILD-SNAPSHOT.jar
-
-#COPY JAVA
 #COPY openjdk-8_8u151-b12-0ubuntu0.16.04.2.debian.tar.xz /home/spring/java/
 
 EXPOSE 8080
