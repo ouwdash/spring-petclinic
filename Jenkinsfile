@@ -1,8 +1,6 @@
 pipeline {
     //ENV 
-     environment {
-         
-         
+    environment {     
          
         //ESSENTIALS
         APPNAME = "spring-petclinic"
@@ -12,28 +10,29 @@ pipeline {
         MAVEN_BUILD_LOG ="$WORKSPACE/log/maven-build.log"
         MAVEN_RUN_LOG = "$WORKSPACE/log/maven-run.log"
         
-        // PACKAGE
+        // PACKAGE groovy
         def PKG_NAME ="target/spring-petclinic-2.0.0.BUILD-SNAPSHOT.jar"
         
                     }
     //Draai op hoofdnode                
     agent {label "master"}
-
+    
 stages {
     stage('Build') {
         steps {
             echo "Cleaning Jenkins pipeline directory $WORKSPACE" 
-        //    sh "sudo rm -Rf $WORKSPACE/*"
-          //  echo "Getting package from Git... ($GIT)"
-        //    sh "git clone $GIT $APPNAME"
-      //      echo "Building package with Maven"
-    //        sh "mv $WORKSPACE/$APPNAME/* $WORKSPACE/"
-          //  sh "./mvnw package &> $MAVEN_BUILD_LOG"
-        //    echo "Printing the results from the logfile..."
-      //      sh "awk '/Results:/{y=1;next}y' $MAVEN_BUILD_LOG" 
+            sh "sudo rm -Rf $WORKSPACE/*"
+            echo "Getting package from Git... ($GIT)"
+            sh "git clone $GIT $APPNAME"
+            echo "Building package with Maven"
+            sh "mv $WORKSPACE/$APPNAME/* $WORKSPACE/"
+            sh "mkdir $WORKSPACE/log/"
+            sh "./mvnw package &> $MAVEN_BUILD_LOG"
+            echo "Printing the results from the logfile..."
+            sh "awk '/Results:/{y=1;next}y' $MAVEN_BUILD_LOG" 
             }
         }
-        stage('Test') {
+    stage('Test') {
             steps {
             //    echo 'Testing..'
                 script{
@@ -67,7 +66,7 @@ stages {
     
             }
         }
-        stage('Deploy') {
+    stage('Deploy') {
             steps {
                 echo 'Deploying....'
             }
