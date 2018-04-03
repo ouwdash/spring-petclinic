@@ -13,6 +13,8 @@ pipeline {
         // PACKAGE groovy
         def PKG_NAME ="target/spring-petclinic-2.0.0.BUILD-SNAPSHOT.jar"
         
+        // Docker
+        DOCKER = "springboot"
                     }
     //Draai op hoofdnode                
     agent {label "master"}
@@ -34,7 +36,7 @@ stages {
         }
     stage('Test') {
             steps {
-            //    echo 'Testing..'
+              echo 'Testing..'
                 script{
                 withEnv(['JENKINS_NODE_COOKIE=dontkill']) 
                 {
@@ -54,7 +56,7 @@ stages {
 
             echo "Shutting down application $PKG_NAME.."
             
-            // Kill process, get service > pid > pgrep ftw.
+          // Kill process, get service > pid > pgrep ftw.
             script {
                  sh "pgrep -f $PKG_NAME > pid"
                 // SCHRIJF bestand naar var.......gg
@@ -68,7 +70,25 @@ stages {
         }
     stage('Deploy') {
             steps {
-                echo 'Deploying....'
+             script {
+                echo "Preparing deployment"
+                sh "docker build -t $DOCKER ."
+                sh "docker run -p 8080:8080 -d --name ubuntu -it $DOCKER"
+                sh "docker ps -q > container"
+                def container = readFile('container').trim()
+                echo "Generating logfile of service......"
+                waitUntil {
+                    script {
+                        def leven = sh script: 'curl -s http://localhost:8080 | grep "Welkom"', returnStatus: true
+                        return (leven == 0);
+                            }
+                            }
+                sh "docker logs $container | tail"
+                echo "======================================="
+                sh "docker ps -as"
+                echo "Goed Bezig! :)"
+                echo  "======================================="
+                 }
             }
         }
     }
