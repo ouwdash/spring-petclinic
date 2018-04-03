@@ -7,8 +7,8 @@ pipeline {
         GIT = "https://github.com/ouwdash/spring-petclinic"
         
         // LOGS
-        MAVEN_BUILD_LOG ="$WORKSPACE/log/maven-build.log"
-        MAVEN_RUN_LOG = "$WORKSPACE/log/maven-run.log"
+        MAVEN_BUILD_LOG ="$WORKSPACE/logs/maven-build.log"
+        MAVEN_RUN_LOG = "$WORKSPACE/logs/maven-run.log"
         
         // PACKAGE groovy
         def PKG_NAME ="target/spring-petclinic-2.0.0.BUILD-SNAPSHOT.jar"
@@ -23,11 +23,12 @@ stages {
     stage('Build') {
         steps {
             echo "Cleaning Jenkins pipeline directory $WORKSPACE" 
-            sh "sudo rm -Rf $WORKSPACE"
-            echo "Getting package from Git... ($GIT)"
-            sh "git clone $GIT ."
+            sh "sudo rm -Rf $WORKSPACE/*"
+            echo "Getting package from G4it... ($GIT)"
+            sh "git clone $GIT $APPNAME"
+            sh "mv $WORKSPACE/$APPNAME/* $WORKSPACE/"
+            sh "mkdir $WORKSPACE/logs/"
             echo "Building package with Maven"
-            sh "mkdir $WORKSPACE/log/"
             sh "./mvnw package &> $MAVEN_BUILD_LOG"
             echo "Printing the results from the logfile..."
             sh "awk '/Results:/{y=1;next}y' $MAVEN_BUILD_LOG" 
