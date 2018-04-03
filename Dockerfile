@@ -17,7 +17,7 @@ ENV PACKAGE_NAME spring-petclinic-2.0.0.BUILD-SNAPSHOT.jar
 RUN apt-get update && apt-get install -y openjdk-8-jdk && rm -rf /var/lib/apt/lists/* && apt-get clean
 
 #COPY PACKAGE VANAF Docker IMG /Users/H/Desktop/Oelan/Docker/Docker_IMG/
-COPY $PACKAGE_NAME $PACKAGE_DEST_DIR/$PACKAGE_NAME
+COPY PACKAGE_SRC_DIR/$PACKAGE_NAME $PACKAGE_DEST_DIR/$PACKAGE_NAME
 
 
 #/home/spring/build/spring-petclinic-2.0.0.BUILD-SNAPSHOT.jar
